@@ -8,21 +8,16 @@ import io.vertx.ext.web.handler.StaticHandler;
 
 public class BackendVerticle extends AbstractVerticle {
 
-    private int port = 8080;
-
-    public BackendVerticle() {
-    }
+    private final int port;
 
     public BackendVerticle(int port) {
         this.port = port;
     }
 
     public static void main(String[] args) {
-        int port;
+        int port = 5000;
         if (args != null && args.length > 0) {
             port = Integer.parseInt(args[0]);
-        } else {
-            port = 8080;
         }
         Vertx vertx = Vertx.vertx(); // (1)
         vertx.deployVerticle(new BackendVerticle(port)); // (2)
@@ -40,7 +35,7 @@ public class BackendVerticle extends AbstractVerticle {
 
         vertx.createHttpServer()
                 .requestHandler(router)
-                .listen(5000);
+                .listen(port);
 
     }
 }
