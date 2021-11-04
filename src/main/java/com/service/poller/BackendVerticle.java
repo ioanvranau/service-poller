@@ -17,7 +17,11 @@ public class BackendVerticle extends AbstractVerticle {
     public static void main(String[] args) {
         int port = 5000;
         if (args != null && args.length > 0) {
-            port = Integer.parseInt(args[0]);
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (Exception e) {
+                // use default
+            }
         }
         Vertx vertx = Vertx.vertx(); // (1)
         vertx.deployVerticle(new BackendVerticle(port)); // (2)
