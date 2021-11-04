@@ -184,3 +184,5 @@ nbdist/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/src/main/frontend/package-lock.json
+/src/main/frontend/build/
