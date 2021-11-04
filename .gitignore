@@ -186,3 +186,4 @@ nbdist/
 !.vscode/extensions.json
 /src/main/frontend/package-lock.json
 /src/main/frontend/build/
+.idea
