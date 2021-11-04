@@ -19,7 +19,7 @@
     <vertx.version>4.2.1</vertx.version>
     <junit-jupiter.version>5.7.0</junit-jupiter.version>
 
-    <main.verticle>com.service.poller.service_poller.MainVerticle</main.verticle>
+    <main.verticle>com.service.poller.service.poller.BackendVerticle</main.verticle>
     <launcher.class>io.vertx.core.Launcher</launcher.class>
   </properties>
 
@@ -43,20 +43,8 @@
 
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
-      <scope>test</scope>
+      <artifactId>vertx-web</artifactId>
+      <version>${vertx.version}</version>
     </dependency>
   </dependencies>
 
