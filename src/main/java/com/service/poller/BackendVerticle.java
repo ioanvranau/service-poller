@@ -68,8 +68,8 @@ public class BackendVerticle extends AbstractVerticle {
                     .setUser(user)
                     .setPort(5432)
                     .setDatabase(database)
-                    .setSsl(true)
-                    .setTrustAll(true)
+//                    .setSsl(true)
+//                    .setTrustAll(true)
                     .setPassword(password);
         } else {
             //assuming mysql
