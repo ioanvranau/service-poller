@@ -6,7 +6,15 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.mysqlclient.MySQLConnectOptions;
+import io.vertx.mysqlclient.MySQLPool;
+import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.PoolOptions;
+import io.vertx.sqlclient.Row;
+import io.vertx.sqlclient.RowSet;
+import io.vertx.sqlclient.SqlClient;
 
 public class BackendVerticle extends AbstractVerticle {
 
@@ -37,7 +45,8 @@ public class BackendVerticle extends AbstractVerticle {
         final Router router = Router.router(vertx);
         Route messageRoute = router.get("/api/message"); // (1)
         messageRoute.handler(rc -> {
-            rc.response().end(helloMessage); // (2)
+            final String s = insertIntoDbTest(rc);
+
         });
 
         router.get().handler(StaticHandler.create()); // (3)
@@ -62,4 +71,41 @@ public class BackendVerticle extends AbstractVerticle {
                 .listen(port);
 
     }
+
+    private String insertIntoDbTest(RoutingContext rc) {
+        MySQLConnectOptions connectOptions = new MySQLConnectOptions()
+                .setPort(3306)
+                .setHost("sql11.freesqldatabase.com")
+                .setDatabase("sql11449016")
+                .setUser("sql11449016")
+                .setPassword("4RqctZVYkH");
+
+// Pool options
+        PoolOptions poolOptions = new PoolOptions()
+                .setMaxSize(5);
+
+// Create the client pool
+        SqlClient client = PgPool.client(vertx, "postgres://ckwvpptcaufjgn:21cd747b69a92f3d39871c8b62cd9ff22dd8af3773d15948247dfe1ed520d763@ec2-54-73-110-26.eu-west-1.compute.amazonaws.com:5432/dc1h7vucrk45rm");
+        //SqlClient client = MySQLPool.pool(vertx, connectionUri);
+
+// A simple query
+        client
+                .query("SELECT * FROM urls")
+                .execute(ar -> {
+                    if (ar.succeeded()) {
+                        RowSet<Row> result = ar.result();
+                        final String resultString = "Got " + result.size() + " rows ";
+                        System.out.println(resultString);
+                        rc.response().end(helloMessage + ">>>" + resultString); // (2)
+                    } else {
+                        System.out.println("Failure: " + ar.cause().getMessage());
+                    }
+
+                    // Now close the pool
+                    client.close();
+                });
+
+        return "";
+    }
+
 }
