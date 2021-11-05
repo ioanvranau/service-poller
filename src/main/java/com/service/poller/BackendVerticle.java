@@ -47,6 +47,7 @@ public class BackendVerticle extends AbstractVerticle {
         }
         Vertx vertx = Vertx.vertx();
         Pool sqlClient = getSqlClient(vertx, sqlConnectOptions);
+        System.out.println("Starting app");
         vertx.deployVerticle(new BackendVerticle(port, sqlClient));
     }
 
@@ -55,6 +56,7 @@ public class BackendVerticle extends AbstractVerticle {
                 .setMaxSize(5);
 
         Pool client;
+        System.out.println("Creating sql pool" + sqlConnectOptions);
         if (sqlConnectOptions instanceof PgConnectOptions) {
             client = PgPool.pool(vertx, (PgConnectOptions) sqlConnectOptions, poolOptions);
         } else {
@@ -70,19 +72,19 @@ public class BackendVerticle extends AbstractVerticle {
         messageRoute.handler(rc -> {
             rc.response().end(helloMessage + ">>>");
         });
-        createRoutesForAlreadyAddedUrls(router, sqlClient);
-
-        router.get().handler(StaticHandler.create());
-
-        Route route = router.route(HttpMethod.POST, "/api/url");
-
-        route.handler(routingContext -> {
-            final HttpServerRequest request = routingContext.request();
-            final String urlName = request.params().get(URL_NAME_PARAM);
-            final String urlPath = request.params().get(URL_PATH_PARAM);
-
-            createAndPersistNewService(router, routingContext, urlName, urlPath, sqlClient);
-        });
+//        createRoutesForAlreadyAddedUrls(router, sqlClient);
+//
+//        router.get().handler(StaticHandler.create());
+//
+//        Route route = router.route(HttpMethod.POST, "/api/url");
+//
+//        route.handler(routingContext -> {
+//            final HttpServerRequest request = routingContext.request();
+//            final String urlName = request.params().get(URL_NAME_PARAM);
+//            final String urlPath = request.params().get(URL_PATH_PARAM);
+//
+//            createAndPersistNewService(router, routingContext, urlName, urlPath, sqlClient);
+//        });
 
         vertx.createHttpServer()
                 .requestHandler(router)
