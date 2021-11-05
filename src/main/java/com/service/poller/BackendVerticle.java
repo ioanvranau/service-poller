@@ -10,39 +10,77 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.mysqlclient.MySQLConnectOptions;
 import io.vertx.mysqlclient.MySQLPool;
+import io.vertx.pgclient.PgConnectOptions;
 import io.vertx.pgclient.PgPool;
 import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlClient;
+import io.vertx.sqlclient.SqlConnectOptions;
 
 public class BackendVerticle extends AbstractVerticle {
 
     public static final String URL_NAME_PARAM = "urlName";
     public static final String URL_PATH_PARAM = "urlPath";
+    final SqlConnectOptions sqlConnectOptions;
     private final int port;
     private String helloMessage = "Hello React from Vert.x!";
 
-    public BackendVerticle(int port) {
+    public BackendVerticle(int port, SqlConnectOptions sqlConnectOptions) {
         this.port = port;
+        this.sqlConnectOptions = sqlConnectOptions;
     }
 
     public static void main(String[] args) {
         int port = 5000;
-        String password = "";
+        SqlConnectOptions sqlConnectOptions = getSqlConnectOptions("localhost", "root", "admin", "servicepoller", false);
         if (args != null && args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
             } catch (Exception e) {
                 // use default
             }
-            if(args[1] != null && !args[1].equals("")) {
-
-            }
-
+            sqlConnectOptions = getConnectionOptionsFromCommandLineArgumentsIfApplicable(args, sqlConnectOptions);
         }
         Vertx vertx = Vertx.vertx(); // (1)
-        vertx.deployVerticle(new BackendVerticle(port)); // (2)
+        vertx.deployVerticle(new BackendVerticle(port, sqlConnectOptions)); // (2)
+    }
+
+    private static SqlConnectOptions getConnectionOptionsFromCommandLineArgumentsIfApplicable(String[] args, SqlConnectOptions sqlConnectOptions) {
+        if (args.length > 3 && args[1] != null && !args[1].equals("")) {
+            String host = args[1];
+            if (args[2] != null && !args[2].equals("")) {
+                String username = args[2];
+                if (args[3] != null && !args[3].equals("")) {
+                    String password = args[3];
+                    sqlConnectOptions = getSqlConnectOptions(host, username, password, "dc1h7vucrk45rm", true);
+                }
+            }
+        }
+        return sqlConnectOptions;
+    }
+
+    private static SqlConnectOptions getSqlConnectOptions(String host, String user, String password, String database, boolean isRemotePostgress) {
+        SqlConnectOptions connectOptions;
+        if (isRemotePostgress) {
+            connectOptions = new PgConnectOptions()
+                    .setHost(host)
+                    .setUser(user)
+                    .setPort(5432)
+                    .setDatabase(database)
+                    .setSsl(true)
+                    .setTrustAll(true)
+                    .setPassword(password);
+        } else {
+            //assuming mysql
+            connectOptions = new MySQLConnectOptions()
+                    .setPort(3306)
+                    .setHost(host)
+                    .setDatabase(database)
+                    .setUser(user)
+                    .setPassword(password);
+        }
+        return connectOptions;
     }
 
     @Override
@@ -78,28 +116,19 @@ public class BackendVerticle extends AbstractVerticle {
     }
 
     private String insertIntoDbTest(RoutingContext rc) {
-        MySQLConnectOptions connectOptions = new MySQLConnectOptions()
-                .setPort(3306)
-                .setHost("sql11.freesqldatabase.com")
-                .setDatabase("sql11449016")
-                .setUser("sql11449016")
-                .setPassword("4RqctZVYkH");
 
-// Pool options
         PoolOptions poolOptions = new PoolOptions()
                 .setMaxSize(5);
 
-// Create the client pool
-        final String username = "ckwvpptcaufjgn";
-        final String passworkd = "21cd747b69a92f3d39871c8b62cd9ff22dd8af3773d15948247dfe1ed520d763";
-        final String host = "ec2-54-73-110-26.eu-west-1.compute.amazonaws.com:5432";
-        final String databse = "dc1h7vucrk45rm";
-        SqlClient client = PgPool.client(vertx, "postgres://" + username + ":" + passworkd + "@" + host + "/" + databse + "?sslmode=require");
-        //SqlClient client = MySQLPool.pool(vertx, connectionUri);
+        SqlClient client;
+        if (sqlConnectOptions instanceof PgConnectOptions) {
+            client = PgPool.client(vertx, (PgConnectOptions) sqlConnectOptions, poolOptions);
+        } else {
+            client = MySQLPool.pool(vertx, (MySQLConnectOptions) sqlConnectOptions, poolOptions);
+        }
 
-// A simple query
         client
-                .query("SELECT * FROM urls")
+                .query("SELECT * FROM url")
                 .execute(ar -> {
                     if (ar.succeeded()) {
                         RowSet<Row> result = ar.result();
