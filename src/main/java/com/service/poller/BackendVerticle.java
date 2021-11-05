@@ -72,7 +72,7 @@ public class BackendVerticle extends AbstractVerticle {
         messageRoute.handler(rc -> {
             rc.response().end(helloMessage + ">>>");
         });
-//        createRoutesForAlreadyAddedUrls(router, sqlClient);
+        createRoutesForAlreadyAddedUrls(router, sqlClient);
 //
 //        router.get().handler(StaticHandler.create());
 //
