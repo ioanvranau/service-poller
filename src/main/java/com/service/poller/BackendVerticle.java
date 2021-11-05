@@ -45,7 +45,7 @@ public class BackendVerticle extends AbstractVerticle {
                 // use default
             }
             url = args[1];
-            //sqlConnectOptions = getConnectionOptionsFromCommandLineArgumentsIfApplicable(args, sqlConnectOptions);
+//            sqlConnectOptions = getConnectionOptionsFromCommandLineArgumentsIfApplicable(args, sqlConnectOptions);
         }
         Vertx vertx = Vertx.vertx();
         Pool sqlClient = getSqlClient(vertx, sqlConnectOptions, url);
@@ -59,7 +59,7 @@ public class BackendVerticle extends AbstractVerticle {
 
         Pool client;
         System.out.println("Creating sql pool" + sqlConnectOptions);
-        if (sqlConnectOptions instanceof PgConnectOptions) {
+        if (true) {
             client = PgPool.pool(vertx, url, poolOptions);
         } else {
             client = MySQLPool.pool(vertx, (MySQLConnectOptions) sqlConnectOptions, poolOptions);
