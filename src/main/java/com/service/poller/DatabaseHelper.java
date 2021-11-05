@@ -8,10 +8,12 @@ import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
+import static utls.ServicePollerUtils.print;
 
 public class DatabaseHelper {
     private static final Random RANDOM = new Random();
     private final static String[] STATUS_LIST = new String[]{"OK", "FAIL"};
+
     public static void createRoutesForAlreadyAddedUrls(Router router, Pool sqlClient) {
 
         sqlClient.getConnection().compose(conn -> conn.query("SELECT * from url")
@@ -26,9 +28,10 @@ public class DatabaseHelper {
                         rc.response().end("My name is: " + urlName + " and I am: " + getRandomValue());
                     });
                 }
+                print("App Started");
 
             } else {
-                System.out.println("Failure: " + ar.cause().getMessage());
+                print("Failure: " + ar.cause().getMessage());
             }
         });
 
@@ -55,7 +58,7 @@ public class DatabaseHelper {
                     insertNewService(routingContext, urlName, urlPath, sqlClient);
                 }
             } else {
-                System.out.println("Failure: " + ar.cause().getMessage());
+                print("Failure: " + ar.cause().getMessage());
                 routingContext.response().end("Service failed to add");
             }
         });
@@ -65,11 +68,11 @@ public class DatabaseHelper {
     public static void insertNewService(RoutingContext routingContext, String urlName, String urlPath, Pool sqlClient) {
         String sql = "INSERT INTO url (name, path) VALUES (?, ?)";
         sqlClient.getConnection().compose(conn -> conn.preparedQuery(sql)
-                .execute(Tuple.of(urlName, urlPath))).onComplete(arInsert -> {
-            if (arInsert.succeeded()) {
+                .execute(Tuple.of(urlName, urlPath))).onComplete(ar -> {
+            if (ar.succeeded()) {
                 routingContext.response().end("Service added with name" + urlName + " and path " + urlPath);
             } else {
-                System.out.println("Failure: " + arInsert.cause().getMessage());
+                print("Failure: " + ar.cause().getMessage());
                 routingContext.response().end("Service failed to add");
             }
         });
