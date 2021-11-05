@@ -62,6 +62,11 @@
             <artifactId>vertx-pg-client</artifactId>
             <version>4.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.23</version>
+        </dependency>
     </dependencies>
 
     <build>
