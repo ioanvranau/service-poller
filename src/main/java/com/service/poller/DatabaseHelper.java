@@ -1,6 +1,9 @@
 package com.service.poller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import com.service.poller.model.ServiceUrl;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;

@@ -44,12 +44,12 @@ public class BackendVerticle extends AbstractVerticle {
             }
         }
         Vertx vertx = Vertx.vertx();
-        Pool sqlClient = getSqlClient(vertx, sqlConnectOptions, url);
+        Pool sqlClient = getSqlClient(vertx, sqlConnectOptions);
         print("Starting app");
         vertx.deployVerticle(new BackendVerticle(webAppPort, sqlClient));
     }
 
-    private static Pool getSqlClient(Vertx vertx, SqlConnectOptions sqlConnectOptions, String url) {
+    private static Pool getSqlClient(Vertx vertx, SqlConnectOptions sqlConnectOptions) {
         PoolOptions poolOptions = new PoolOptions().setMaxSize(5);
 
         Pool client;
@@ -69,9 +69,14 @@ public class BackendVerticle extends AbstractVerticle {
 
         router.get().handler(StaticHandler.create());
 
-        Route route = router.route(HttpMethod.POST, "/api/url");
+        final ServiceUrlRepository serviceUrlRepository = ServiceUrlRepository.create(sqlClient);
+        final ServiceUrlService serviceUrlService = ServiceUrlService.create(serviceUrlRepository);
+        Route getAllUrlsRoute = router.get("/api/url");
+        getAllUrlsRoute.handler(serviceUrlService::all);
 
-        route.handler(routingContext -> {
+        Route addUrlsRoute = router.route(HttpMethod.POST, "/api/url");
+
+        addUrlsRoute.handler(routingContext -> {
             final HttpServerRequest request = routingContext.request();
             final String urlName = request.params().get(URL_NAME_PARAM);
             final String urlPath = request.params().get(URL_PATH_PARAM);
