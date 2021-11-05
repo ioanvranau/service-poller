@@ -9,6 +9,7 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.Tuple;
 import static utls.ServicePollerUtils.print;
+import static utls.ServicePollerUtils.validUrl;
 
 public class DatabaseHelper {
     private static final Random RANDOM = new Random();
@@ -43,6 +44,10 @@ public class DatabaseHelper {
     }
 
     public static void createAndPersistNewService(Router router, RoutingContext routingContext, String urlName, String urlPath, Pool sqlClient) {
+        if (!validUrl(urlPath)) {
+            routingContext.response().end("Invalid url path for" + urlName + " and path " + urlPath);
+            return;
+        }
         Route dynamicRoute = router.get("/api/" + urlPath);
         dynamicRoute.handler(rc -> {
             rc.response().end("My name is: " + urlName + " and I am: " + getRandomValue());

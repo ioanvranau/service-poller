@@ -22,4 +22,11 @@ public class ServicePollerUtils {
     public static void print(String message) {
         System.out.println(message);
     }
+
+    public static boolean validUrl(String urlPath) {
+        if(urlPath.startsWith("/") || urlPath.startsWith("\\")) {
+            return false;
+        }
+        return false;
+    }
 }

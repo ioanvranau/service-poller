@@ -8,6 +8,6 @@ CREATE TABLE if not exists servicepoller.url (
     PRIMARY KEY (id) USING BTREE,
     UNIQUE INDEX path (path) USING BTREE
     );
-INSERT IGNORE INTO url(name, path) VALUES ('My First URL', '/my/first/url');
-INSERT IGNORE INTO url(name, path) VALUES ('My Second URL', '/my/second/url');
-INSERT IGNORE INTO url(name, path) VALUES ('My Third URL', '/my/third/url');
+INSERT IGNORE INTO url(name, path) VALUES ('My First URL', 'my/first/url');
+INSERT IGNORE INTO url(name, path) VALUES ('My Second URL', 'my/second/url');
+INSERT IGNORE INTO url(name, path) VALUES ('My Third URL', 'my/third/url');
