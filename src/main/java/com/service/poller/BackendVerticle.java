@@ -37,28 +37,30 @@ public class BackendVerticle extends AbstractVerticle {
     public static void main(String[] args) {
         int port = 5000;
         SqlConnectOptions sqlConnectOptions = getSqlConnectOptions("localhost", "root", "admin", "servicepoller", false);
+        String url = "";
         if (args != null && args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
             } catch (Exception e) {
                 // use default
             }
-            sqlConnectOptions = getConnectionOptionsFromCommandLineArgumentsIfApplicable(args, sqlConnectOptions);
+            url = args[1];
+            //sqlConnectOptions = getConnectionOptionsFromCommandLineArgumentsIfApplicable(args, sqlConnectOptions);
         }
         Vertx vertx = Vertx.vertx();
-        Pool sqlClient = getSqlClient(vertx, sqlConnectOptions);
+        Pool sqlClient = getSqlClient(vertx, sqlConnectOptions, url);
         System.out.println("Starting app");
         vertx.deployVerticle(new BackendVerticle(port, sqlClient));
     }
 
-    private static Pool getSqlClient(Vertx vertx, SqlConnectOptions sqlConnectOptions) {
+    private static Pool getSqlClient(Vertx vertx, SqlConnectOptions sqlConnectOptions, String url) {
         PoolOptions poolOptions = new PoolOptions()
                 .setMaxSize(5);
 
         Pool client;
         System.out.println("Creating sql pool" + sqlConnectOptions);
         if (sqlConnectOptions instanceof PgConnectOptions) {
-            client = PgPool.pool(vertx, (PgConnectOptions) sqlConnectOptions, poolOptions);
+            client = PgPool.pool(vertx, url, poolOptions);
         } else {
             client = MySQLPool.pool(vertx, (MySQLConnectOptions) sqlConnectOptions, poolOptions);
         }
