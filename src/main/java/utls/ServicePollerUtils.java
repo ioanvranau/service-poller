@@ -13,7 +13,7 @@ public class ServicePollerUtils {
                 if (args[3] != null && !args[3].equals("")) {
                     String password = args[3];
                     sqlConnectOptions = getSqlConnectOptions(host, username, password, "dc1h7vucrk45rm", true);
-                    System.out.println("Connection options successfully received");
+                    System.out.println("Connection options successfully received " + host +  username + password);
                 }
             }
         }
