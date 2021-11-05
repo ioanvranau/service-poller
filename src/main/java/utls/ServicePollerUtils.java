@@ -24,7 +24,7 @@ public class ServicePollerUtils {
     }
 
     public static boolean validUrl(String urlPath) {
-        if(urlPath.startsWith("/") || urlPath.startsWith("\\")) {
+        if (urlPath.startsWith("/") || urlPath.startsWith("\\")) {
             return false;
         }
         return false;
