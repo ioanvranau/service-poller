@@ -29,12 +29,17 @@ public class BackendVerticle extends AbstractVerticle {
 
     public static void main(String[] args) {
         int port = 5000;
+        String password = "";
         if (args != null && args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
             } catch (Exception e) {
                 // use default
             }
+            if(args[1] != null && !args[1].equals("")) {
+
+            }
+
         }
         Vertx vertx = Vertx.vertx(); // (1)
         vertx.deployVerticle(new BackendVerticle(port)); // (2)
@@ -85,7 +90,11 @@ public class BackendVerticle extends AbstractVerticle {
                 .setMaxSize(5);
 
 // Create the client pool
-        SqlClient client = PgPool.client(vertx, "postgres://ckwvpptcaufjgn:21cd747b69a92f3d39871c8b62cd9ff22dd8af3773d15948247dfe1ed520d763@ec2-54-73-110-26.eu-west-1.compute.amazonaws.com:5432/dc1h7vucrk45rm");
+        final String username = "ckwvpptcaufjgn";
+        final String passworkd = "21cd747b69a92f3d39871c8b62cd9ff22dd8af3773d15948247dfe1ed520d763";
+        final String host = "ec2-54-73-110-26.eu-west-1.compute.amazonaws.com:5432";
+        final String databse = "dc1h7vucrk45rm";
+        SqlClient client = PgPool.client(vertx, "postgres://" + username + ":" + passworkd + "@" + host + "/" + databse + "?sslmode=require");
         //SqlClient client = MySQLPool.pool(vertx, connectionUri);
 
 // A simple query
