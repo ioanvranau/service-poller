@@ -1,6 +1,10 @@
 package com.service.poller.model;
 
+import java.util.Random;
+
 public class ServiceUrl {
+    private static final Random RANDOM = new Random();
+    private final static String[] STATUS_LIST = new String[]{"OK", "FAIL"};
     private String name;
     private String path;
 
@@ -8,7 +12,12 @@ public class ServiceUrl {
         ServiceUrl serviceUrl = new ServiceUrl();
         serviceUrl.setName(name);
         serviceUrl.setPath(path);
-        return  serviceUrl;
+        return serviceUrl;
+    }
+
+    public static String getRandomValue() {
+        final int index = RANDOM.nextInt(STATUS_LIST.length);
+        return STATUS_LIST[index];
     }
 
     public String getName() {
@@ -25,5 +34,9 @@ public class ServiceUrl {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String displayStatus() {
+        return "My name is: " + path + " and I am: " + getRandomValue();
     }
 }

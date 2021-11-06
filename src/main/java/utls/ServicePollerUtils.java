@@ -27,6 +27,6 @@ public class ServicePollerUtils {
         if (urlPath.startsWith("/") || urlPath.startsWith("\\")) {
             return false;
         }
-        return false;
+        return true;
     }
 }
