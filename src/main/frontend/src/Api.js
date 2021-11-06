@@ -3,6 +3,16 @@ export function getAllServiceUrls() {
         .then(response => response.json());
 }
 
+export function updateNewServiceUrl(name, path) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, path: path})
+    };
+    return fetch('/api/url', requestOptions)
+        .then(response => response);
+}
+
 export function addNewServiceUrl(name, path) {
     const requestOptions = {
         method: 'POST',

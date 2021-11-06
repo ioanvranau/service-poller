@@ -63,4 +63,10 @@ public class ServiceUrlRepository {
         return client.preparedQuery("DELETE FROM url WHERE path=?").execute(Tuple.of(path))
                 .map(SqlResult::rowCount);
     }
+
+    public Future<Integer> update(ServiceUrl serviceUrl) {
+        return client.preparedQuery("UPDATE url SET name=? WHERE path=?")
+                .execute(Tuple.of(serviceUrl.getName(), serviceUrl.getPath()))
+                .map(SqlResult::rowCount);
+    }
 }

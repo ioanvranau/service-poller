@@ -73,9 +73,13 @@ public class MainVerticle extends AbstractVerticle {
 
         serviceUrlService.createRoutesForAlreadyAddedUrls(router);
 
-        router.post("/api/url").consumes("application/json").handler(BodyHandler.create()).handler(routingContext -> {
-            serviceUrlService.createAndPersistNewService(router, routingContext);
-        });
+        router.post("/api/url").consumes("application/json")
+                .handler(BodyHandler.create())
+                .handler(routingContext -> serviceUrlService.createAndPersistNewService(router, routingContext));
+
+        router.put("/api/url").consumes("application/json")
+                .handler(BodyHandler.create())
+                .handler(rc -> serviceUrlService.update(router, rc));
         return router;
     }
 }

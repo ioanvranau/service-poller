@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {addNewServiceUrl, getAllServiceUrls} from './Api';
+import {addNewServiceUrl, getAllServiceUrls, updateNewServiceUrl} from './Api';
 import UrlCard from './UrlCard';
 
 function App() {
@@ -37,7 +37,9 @@ function App() {
     }
 
     function updateService() {
-
+        updateNewServiceUrl(urlNameToEdit, urlPathToEdit).then(() => {
+                fetchAllUrls();
+        });
     }
 
     function addNewService() {
