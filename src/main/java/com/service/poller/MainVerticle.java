@@ -48,19 +48,32 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         LOGGER.info("Starting HTTP server...");
-        final Router router = Router.router(vertx);
-        Route messageRoute = router.get("/api/message");
-        messageRoute.handler(rc -> {
-            rc.response().end(helloMessage + ">>>");
-        });
         final ServiceUrlRepository serviceUrlRepository = ServiceUrlRepository.create(sqlClient);
         final ServiceUrlService serviceUrlService = ServiceUrlService.create(serviceUrlRepository);
-        serviceUrlService.createRoutesForAlreadyAddedUrls(router);
+
+        final Router router = createRoutes(serviceUrlService);
+
+        vertx.createHttpServer().requestHandler(router).listen(port).onSuccess(server -> {
+                    LOGGER.info("HTTP server started on port " + server.actualPort());
+                })
+                .onFailure(event -> {
+                    LOGGER.severe("Failed to start HTTP server:" + event.getMessage());
+                });
+    }
+
+    private Router createRoutes(ServiceUrlService serviceUrlService) {
+        final Router router = Router.router(vertx);
+        Route testRoute = router.get("/api/message");
+        testRoute.handler(rc -> {
+            rc.response().end(helloMessage + ">>>");
+        });
 
         router.get().handler(StaticHandler.create());
 
         Route getAllUrlsRoute = router.get("/api/url");
-        getAllUrlsRoute.handler(serviceUrlService::all);
+        getAllUrlsRoute.produces("application/json").handler(serviceUrlService::all);
+
+        serviceUrlService.createRoutesForAlreadyAddedUrls(router);
 
         Route addUrlsRoute = router.route(HttpMethod.POST, "/api/url");
 
@@ -71,12 +84,6 @@ public class MainVerticle extends AbstractVerticle {
 
             serviceUrlService.createAndPersistNewService(router, routingContext, urlName, urlPath);
         });
-
-        vertx.createHttpServer().requestHandler(router).listen(port).onSuccess(server -> {
-                    LOGGER.info("HTTP server started on port " + server.actualPort());
-                })
-                .onFailure(event -> {
-                    LOGGER.severe("Failed to start HTTP server:" + event.getMessage());
-                });
+        return router;
     }
 }

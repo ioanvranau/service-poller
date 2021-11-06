@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import {getAllServiceUrls} from './Api';
+import UrlCard from './UrlCard';
 
 function App() {
 
@@ -17,28 +18,13 @@ function App() {
     }, []);
 
     const resultUrls = (urls || []).map((url) =>
-        <tr key={url.path}>
-            <td>{url.name}</td>
-            <td>{url.path}</td>
-        </tr>
+        <UrlCard name={url.name} status={"OK"}/>
     );
 
     return (
         <div>
-            {/*<div className="search-input">*/}
-            {/*    <input onChange={fetchAllUrls} type="text" placeholder="Search"/>*/}
-            {/*</div>*/}
-            <h1 className="h1">Search Results</h1>
-            <div className="books">
-                <table>
-                    <thead>
-                    <tr>
-                        <th className="title-col">Name</th>
-                        <th className="author-col">Path</th>
-                    </tr>
-                    </thead>
-                    <tbody>{resultUrls}</tbody>
-                </table>
+            <div className="root">
+                {resultUrls}
             </div>
         </div>
 

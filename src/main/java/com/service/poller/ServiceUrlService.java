@@ -11,7 +11,7 @@ import static utls.ServicePollerUtils.validUrl;
 
 public class ServiceUrlService {
     private final static Logger LOGGER = Logger.getLogger(ServiceUrlService.class.getName());
-    private ServiceUrlRepository serviceUrlRepository;
+    private final ServiceUrlRepository serviceUrlRepository;
 
     private ServiceUrlService(ServiceUrlRepository serviceUrlRepository) {
         this.serviceUrlRepository = serviceUrlRepository;
@@ -38,8 +38,7 @@ public class ServiceUrlService {
                                     newRc.response().end(serviceUrl.displayStatus());
                                 });
                             }
-                            print("App Started");
-                            LOGGER.info("App started...");
+                            LOGGER.info("Routes for existing urls has been created");
                         });
     }
 

@@ -8,23 +8,6 @@
     padding: 0.5rem 1rem;
 }
 
-ul.menu {
-    list-style: none;
-}
-
-ul.menu li {
-    display: inline;
-    padding: 12px;
-}
-
-ul.menu a {
-    color: #ffffff;
-}
-
-.page-home {
-    text-align: center;
-}
-
 .content {
     text-align: left;
     display: inline-block;
@@ -34,25 +17,6 @@ ul.menu a {
     padding: 16px;
     box-sizing: border-box;
 }
+.root {
 
-h1 {
-    text-align: center;
-}
-
-.books table {
-    width: 100%;
-}
-
-.title-col {
-    max-width: 60%;
-}
-
-.search-input {
-    padding: 4px;
-    text-align: center;
-}
-
-.search-input input {
-    display: inline-block;
-    width: 50%;
 }
