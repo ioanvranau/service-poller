@@ -35,7 +35,7 @@ public class ServiceUrlService {
                             for (ServiceUrl serviceUrl : data) {
                                 Route messageRoute = router.get("/api/" + serviceUrl.getPath());
                                 messageRoute.handler(newRc -> {
-                                    newRc.response().end(serviceUrl.displayStatus());
+                                    newRc.response().end(serviceUrl.getStatus());
                                 });
                             }
                             LOGGER.info("Routes for existing urls has been created");
@@ -60,7 +60,7 @@ public class ServiceUrlService {
                             serviceUrl.setPath(path);
                             serviceUrlRepository.save(serviceUrl).onSuccess(
                                     id -> {
-                                        dynamicRoute.handler(rc -> rc.response().end(serviceUrl.displayStatus()));
+                                        dynamicRoute.handler(rc -> rc.response().end(serviceUrl.getStatus()));
                                         routingContext.response().end("Service added with name" + name + " and path " + path);
                                     }).onFailure(throwable -> {
                                 routingContext.response().end("Cannot save service");

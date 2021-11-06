@@ -18,13 +18,25 @@ function App() {
     }, []);
 
     const resultUrls = (urls || []).map((url) =>
-        <UrlCard name={url.name} status={"OK"}/>
+        <UrlCard name={url.name} status={url.status} path={url.path}/>
     );
 
     return (
-        <div>
-            <div className="root">
+        <div className="content">
+            <div>
+                <h2>Add new service</h2>
+                <div className="add-container">
+                    <div>Service name</div>
+                    <input />
+                    <div>Service path</div>
+                    <input />
+                    <button onClick={fetchAllUrls}>Add</button>
+                </div>
+            </div>
+            <div className="url-cards-container">
+                <div className="row">
                 {resultUrls}
+                </div>
             </div>
         </div>
 

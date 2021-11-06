@@ -7,6 +7,7 @@ public class ServiceUrl {
     private final static String[] STATUS_LIST = new String[]{"OK", "FAIL"};
     private String name;
     private String path;
+    private String status;
 
     public static ServiceUrl of(String name, String path) {
         ServiceUrl serviceUrl = new ServiceUrl();
@@ -36,7 +37,11 @@ public class ServiceUrl {
         this.path = path;
     }
 
-    public String displayStatus() {
-        return "My name is: " + path + " and I am: " + getRandomValue();
+    public String getStatus() {
+        return getRandomValue();
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

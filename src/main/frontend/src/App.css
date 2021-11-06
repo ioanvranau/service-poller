@@ -17,6 +17,49 @@
     padding: 16px;
     box-sizing: border-box;
 }
-.root {
 
+.url-cards-container {
+    width: 500px;
 }
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
+    }
+}
+
+/* Float four columns side by side */
+.column {
+    float: left;
+    width: 25%;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row {
+    margin: 0 -5px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.add-container {
+    width: 700px;
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.add-container button {
+    margin: 3px 10px;
+}
+
+.add-container div {
+    margin: 3px 10px 3px 0;
+}
+

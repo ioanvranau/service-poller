@@ -1,12 +1,21 @@
 import React from 'react';
 import './UrlCard.css';
 
-const UrlCard = props => {
+function UrlCard({name, path, status})  {
+
+    function deleteCard() {
+        alert("clicked" + path);
+    }
 
     return (
-        <div className="card">
-            <div className="url-name">{props.name}</div>
-            <div className="url-status">{props.status}</div>
+        <div className="column">
+            <div className="card">
+                <div className="card-header">
+                    <div className="url-name">{name}</div>
+                    <div className="card-delete" onClick={deleteCard}>X</div>
+                </div>
+                <div className="url-status">{status}</div>
+            </div>
         </div>
     );
 }
