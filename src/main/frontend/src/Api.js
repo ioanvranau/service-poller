@@ -12,3 +12,6 @@ export function addNewServiceUrl(name, path) {
     return fetch('/api/url', requestOptions)
         .then(response => response.json());
 }
+export function deleteServiceUrl(path) {
+    return fetch('api/url/' + path, { method: 'DELETE' });
+}

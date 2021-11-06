@@ -1,6 +1,7 @@
 package com.service.poller;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -54,6 +55,12 @@ public class ServiceUrlRepository {
     public Future<Integer> save(ServiceUrl serviceUrl) {
         String sql = "INSERT INTO url (name, path) VALUES (?, ?)";
         return client.preparedQuery(sql).execute(Tuple.of(serviceUrl.getName(), serviceUrl.getPath()))
+                .map(SqlResult::rowCount);
+    }
+
+    public Future<Integer> deleteByPath(String path) {
+        Objects.requireNonNull(path, "path can not be null");
+        return client.preparedQuery("DELETE FROM url WHERE path=?").execute(Tuple.of(path))
                 .map(SqlResult::rowCount);
     }
 }

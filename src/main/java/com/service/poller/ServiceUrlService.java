@@ -1,5 +1,6 @@
 package com.service.poller;
 
+import java.util.Map;
 import java.util.logging.Logger;
 import com.service.poller.model.ServiceUrl;
 import io.vertx.core.json.Json;
@@ -34,13 +35,17 @@ public class ServiceUrlService {
                 .onSuccess(
                         data -> {
                             for (ServiceUrl serviceUrl : data) {
-                                Route messageRoute = router.get("/api/" + serviceUrl.getPath());
-                                messageRoute.handler(newRc -> {
-                                    newRc.response().end(serviceUrl.getStatus());
-                                });
+                                createNewRoute(router, serviceUrl);
                             }
                             LOGGER.info("Routes for existing urls has been created");
                         });
+    }
+
+    private void createNewRoute(Router router, ServiceUrl serviceUrl) {
+        Route messageRoute = router.get("/api/" + serviceUrl.getPath());
+        messageRoute.handler(newRc -> {
+            newRc.response().end(serviceUrl.getStatus());
+        });
     }
 
     public void createAndPersistNewService(Router router, RoutingContext routingContext) {
@@ -58,13 +63,12 @@ public class ServiceUrlService {
                                 routingContext.response().end(Json.encode(new ServiceException("Service already exists with this path: " + path)));
                                 return;
                             }
-                            Route dynamicRoute = router.get("/api/" + path);
                             ServiceUrl serviceUrl = new ServiceUrl();
                             serviceUrl.setName(name);
                             serviceUrl.setPath(path);
                             serviceUrlRepository.save(serviceUrl).onSuccess(
                                     id -> {
-                                        dynamicRoute.handler(rc -> rc.response().end(serviceUrl.getStatus()));
+                                        createNewRoute(router, serviceUrl);
                                         routingContext.response().end(Json.encode(newServiceUrl));
                                     }).onFailure(throwable -> {
                                 routingContext.response().end("Cannot save service");
@@ -75,5 +79,22 @@ public class ServiceUrlService {
                             routingContext.response().end("Cannot save service");
                         }
                 );
+    }
+
+    public void delete(RoutingContext rc) {
+        Map<String, String> params = rc.pathParams();
+        String path = params.get("path");
+
+        this.serviceUrlRepository.findByPath(path)
+                .compose(
+                        post -> this.serviceUrlRepository.deleteByPath(path)
+                )
+                .onSuccess(
+                        data -> rc.response().setStatusCode(204).end()
+                )
+                .onFailure(
+                        throwable -> rc.fail(404, throwable)
+                );
+
     }
 }

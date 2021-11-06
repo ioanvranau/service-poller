@@ -69,6 +69,7 @@ public class MainVerticle extends AbstractVerticle {
 
         Route getAllUrlsRoute = router.get("/api/url");
         getAllUrlsRoute.produces("application/json").handler(serviceUrlService::all);
+        router.delete("/api/url/:path").handler(serviceUrlService::delete);
 
         serviceUrlService.createRoutesForAlreadyAddedUrls(router);
 

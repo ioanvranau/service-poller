@@ -1,10 +1,13 @@
 import React from 'react';
 import './UrlCard.css';
+import {deleteServiceUrl} from "./Api";
 
-function UrlCard({name, path, status, urlEditCallback}) {
+function UrlCard({name, path, status, urlEditCallback, refreshUrls}) {
 
     function deleteCard() {
-        alert("clicked" + path);
+        deleteServiceUrl(path).then(() => {
+            refreshUrls();
+        });
     }
 
     function getCardData() {
