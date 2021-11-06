@@ -6,8 +6,9 @@ import io.vertx.core.json.Json;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import static utls.ServicePollerUtils.print;
-import static utls.ServicePollerUtils.validUrl;
+import utils.ServiceException;
+import static utils.ServicePollerUtils.print;
+import static utils.ServicePollerUtils.validUrl;
 
 public class ServiceUrlService {
     private final static Logger LOGGER = Logger.getLogger(ServiceUrlService.class.getName());
@@ -42,7 +43,10 @@ public class ServiceUrlService {
                         });
     }
 
-    public void createAndPersistNewService(Router router, RoutingContext routingContext, String name, String path) {
+    public void createAndPersistNewService(Router router, RoutingContext routingContext) {
+        final ServiceUrl newServiceUrl = routingContext.getBodyAsJson().mapTo(ServiceUrl.class);
+        final String name = newServiceUrl.getName();
+        final String path = newServiceUrl.getPath();
         if (!validUrl(path)) {
             routingContext.response().end("Invalid url path for" + name + " and path ");
             return;
@@ -51,7 +55,7 @@ public class ServiceUrlService {
                 .onSuccess(
                         data -> {
                             if (data != null) {
-                                routingContext.response().end("Already exists");
+                                routingContext.response().end(Json.encode(new ServiceException("Service already exists with this path: " + path)));
                                 return;
                             }
                             Route dynamicRoute = router.get("/api/" + path);
@@ -61,7 +65,7 @@ public class ServiceUrlService {
                             serviceUrlRepository.save(serviceUrl).onSuccess(
                                     id -> {
                                         dynamicRoute.handler(rc -> rc.response().end(serviceUrl.getStatus()));
-                                        routingContext.response().end("Service added with name" + name + " and path " + path);
+                                        routingContext.response().end(Json.encode(newServiceUrl));
                                     }).onFailure(throwable -> {
                                 routingContext.response().end("Cannot save service");
                                 print(throwable.getMessage());

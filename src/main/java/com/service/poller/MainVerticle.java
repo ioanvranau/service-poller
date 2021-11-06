@@ -3,20 +3,17 @@ package com.service.poller;
 import java.util.logging.Logger;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpMethod;
-import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.SqlConnectOptions;
 import static com.service.poller.DatabaseHelper.getSqlClient;
-import static utls.ServicePollerUtils.getSqlConnectOptions;
+import static utils.ServicePollerUtils.getSqlConnectOptions;
 
 public class MainVerticle extends AbstractVerticle {
 
-    public static final String URL_NAME_PARAM = "urlName";
-    public static final String URL_PATH_PARAM = "urlPath";
     private final static Logger LOGGER = Logger.getLogger(MainVerticle.class.getName());
 
     final Pool sqlClient;
@@ -75,14 +72,8 @@ public class MainVerticle extends AbstractVerticle {
 
         serviceUrlService.createRoutesForAlreadyAddedUrls(router);
 
-        Route addUrlsRoute = router.route(HttpMethod.POST, "/api/url");
-
-        addUrlsRoute.handler(routingContext -> {
-            final HttpServerRequest request = routingContext.request();
-            final String urlName = request.params().get(URL_NAME_PARAM);
-            final String urlPath = request.params().get(URL_PATH_PARAM);
-
-            serviceUrlService.createAndPersistNewService(router, routingContext, urlName, urlPath);
+        router.post("/api/url").consumes("application/json").handler(BodyHandler.create()).handler(routingContext -> {
+            serviceUrlService.createAndPersistNewService(router, routingContext);
         });
         return router;
     }

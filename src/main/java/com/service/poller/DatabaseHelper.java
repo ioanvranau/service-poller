@@ -6,7 +6,7 @@ import io.vertx.mysqlclient.MySQLPool;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.SqlConnectOptions;
-import static utls.ServicePollerUtils.print;
+import static utils.ServicePollerUtils.print;
 
 public class DatabaseHelper {
     public static Pool getSqlClient(Vertx vertx, SqlConnectOptions sqlConnectOptions) {

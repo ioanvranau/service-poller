@@ -20,16 +20,20 @@
     background: white;
 
 }
+
 .card-delete:hover {
     background-color: #00BFFFFF;
 }
+
 .card-delete {
     padding: 5px;
     background-color: #DB7093FF;
 }
+
 .card-header {
     display: flex;
 }
+
 .url-status {
     text-align: center;
     padding: 15px 5px;
