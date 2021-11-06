@@ -8,11 +8,11 @@ function UrlCard({name, path, status})  {
     }
 
     return (
-        <div className="column">
+        <div className="column" title={"My name is " + name + " and my path is " + path}>
             <div className="card">
                 <div className="card-header">
                     <div className="url-name">{name}</div>
-                    <div className="card-delete" onClick={deleteCard}>X</div>
+                    <div className="card-delete" title="Delete me!" onClick={deleteCard}>X</div>
                 </div>
                 <div className="url-status">{status}</div>
             </div>
