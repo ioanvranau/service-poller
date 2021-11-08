@@ -9,7 +9,6 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import utils.ServiceException;
-import static utils.ServicePollerUtils.print;
 import static utils.ServicePollerUtils.validUrl;
 
 public class ServiceUrlService {
@@ -66,7 +65,7 @@ public class ServiceUrlService {
                             }
                             saveServiceUrl(router, routingContext, newServiceUrl.getName(), newServiceUrl.getPath());
                         }).onFailure(throwable -> {
-                            print(throwable.getMessage());
+                            LOGGER.severe(throwable.getMessage());
                             routingContext.response().end("Cannot save service");
                         }
                 );
@@ -82,7 +81,7 @@ public class ServiceUrlService {
                     routingContext.response().end(Json.encode(serviceUrl));
                 }).onFailure(throwable -> {
             routingContext.response().end("Cannot save service");
-            print(throwable.getMessage());
+            LOGGER.severe(throwable.getMessage());
         });
     }
 

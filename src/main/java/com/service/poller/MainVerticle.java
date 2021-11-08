@@ -9,7 +9,7 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.SqlConnectOptions;
-import static com.service.poller.DatabaseHelper.getSqlClient;
+import static utils.ServicePollerUtils.getSqlClient;
 import static utils.ServicePollerUtils.getSqlConnectOptions;
 
 public class MainVerticle extends AbstractVerticle {
