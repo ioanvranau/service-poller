@@ -76,6 +76,7 @@ function App() {
             </div>
             <div className="url-cards-container">
                 <h3>Click on any URL card name to get data for update</h3>
+                <h3>{window.location.href}</h3>
                 <div className="row">
                     {resultUrls}
                 </div>
