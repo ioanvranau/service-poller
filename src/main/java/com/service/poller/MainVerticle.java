@@ -60,11 +60,6 @@ public class MainVerticle extends AbstractVerticle {
 
     private Router createRoutes(ServiceUrlService serviceUrlService) {
         final Router router = Router.router(vertx);
-        Route testRoute = router.get("/api/message");
-        testRoute.handler(rc -> {
-            rc.response().end(helloMessage + ">>>");
-        });
-
         router.get().handler(StaticHandler.create());
 
         router.get("/api/url").produces("application/json").handler(serviceUrlService::all);

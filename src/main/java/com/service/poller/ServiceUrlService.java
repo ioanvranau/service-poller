@@ -26,7 +26,7 @@ public class ServiceUrlService {
     }
 
     public void all(RoutingContext rc) {
-        LOGGER.info("fetchAll");
+        LOGGER.info("Getting all urls");
         this.serviceUrlRepository.findAll()
                 .onSuccess(
                         data -> rc.response().end(Json.encode(data))
@@ -45,7 +45,7 @@ public class ServiceUrlService {
     }
 
     private void createNewRoute(Router router, ServiceUrl serviceUrl) {
-        Route messageRoute = router.get("/api/" + serviceUrl.getPath());
+        Route messageRoute = router.get("/" + serviceUrl.getPath());
         messageRoute.handler(newRc -> {
             newRc.response().end(serviceUrl.getStatus());
         });
