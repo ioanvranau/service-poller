@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {addNewServiceUrl, getAllServiceUrls, updateNewServiceUrl} from './Api';
+import {addNewServiceUrl, getAllServiceUrls, ShowErrorMessage, ShowSuccessMessage, updateNewServiceUrl} from './Api';
 import UrlCard from './UrlCard';
+import "react-notifications/lib/notifications.css";
+import {NotificationContainer} from "react-notifications";
 
 function App() {
 
@@ -38,22 +40,28 @@ function App() {
 
     function updateService() {
         updateNewServiceUrl(urlNameToEdit, urlPathToEdit).then(() => {
-                fetchAllUrls();
+            fetchAllUrls();
         });
     }
 
     function addNewService() {
-        addNewServiceUrl(urlNameToEdit, urlPathToEdit).then(response => {
-            if (response.error) {
-                alert(response.error);
+        addNewServiceUrl(urlNameToEdit, urlPathToEdit).then(() => {
+            fetchAllUrls();
+            ShowSuccessMessage('Service added successfully');
+        }).catch(function (error) {
+            if (error.status === 409) {
+                ShowErrorMessage('Service already added with path:' + urlPathToEdit);
+            } else if (error.status === 406) {
+                ShowErrorMessage('Invalid name: ' + urlPathToEdit + ' or path:' + urlPathToEdit);
             } else {
-                fetchAllUrls();
+                ShowErrorMessage('Cannot add new service:' + error.statusText);
             }
         });
     }
 
     return (
         <div className="content">
+            <NotificationContainer/>
             <div>
                 <h2>Add new service</h2>
                 <div className="add-container">

@@ -1,3 +1,5 @@
+import {NotificationManager} from "react-notifications";
+
 export function getAllServiceUrls() {
     return fetch("/api/url")
         .then(response => response.json());
@@ -20,8 +22,27 @@ export function addNewServiceUrl(name, path) {
         body: JSON.stringify({name: name, path: path})
     };
     return fetch('/api/url', requestOptions)
-        .then(response => response.json());
+        .then(handleErrors)
+        .then(response => {
+            return response.json();
+        })
 }
+
 export function deleteServiceUrl(path) {
-    return fetch('api/url/' + path, { method: 'DELETE' });
+    return fetch('api/url/' + path, {method: 'DELETE'});
+}
+
+export function ShowSuccessMessage(message) {
+    NotificationManager.success(message, "", 2000);
+}
+
+export function ShowErrorMessage(message) {
+    NotificationManager.error(message, "", 2000);
+}
+
+function handleErrors(response) {
+    if (!response.ok) {
+        throw response;
+    }
+    return response;
 }

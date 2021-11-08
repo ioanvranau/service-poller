@@ -1,9 +1,10 @@
 package utils;
 
-public class ServiceException {
+public class ServiceException extends RuntimeException {
     private String error;
 
     public ServiceException(String error) {
+        super(error);
         this.error = error;
     }
 

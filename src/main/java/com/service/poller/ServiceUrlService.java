@@ -1,5 +1,6 @@
 package com.service.poller;
 
+import java.net.HttpURLConnection;
 import java.util.Map;
 import java.util.logging.Logger;
 import com.service.poller.model.ServiceUrl;
@@ -9,6 +10,7 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import utils.ServiceException;
+import static java.net.HttpURLConnection.HTTP_NOT_ACCEPTABLE;
 import static utils.ServicePollerUtils.validUrl;
 
 public class ServiceUrlService {
@@ -52,21 +54,17 @@ public class ServiceUrlService {
         final ServiceUrl newServiceUrl = routingContext.getBodyAsJson().mapTo(ServiceUrl.class);
         final String name = newServiceUrl.getName();
         final String path = newServiceUrl.getPath();
-        if (!validUrl(path)) {
-            routingContext.response().end("Invalid url path for" + name + " and path ");
+        if (!validUrl(path) || name == null || name.length() == 0) {
+            routingContext.fail(HTTP_NOT_ACCEPTABLE);
             return;
         }
         this.serviceUrlRepository.findByPath(path)
                 .onSuccess(
                         data -> {
-                            if (data != null) {
-                                routingContext.response().end(Json.encode(new ServiceException("Service already exists with this path: " + path)));
-                                return;
-                            }
+                            routingContext.fail(HttpURLConnection.HTTP_CONFLICT, new ServiceException("Service url already exists"));
+                        })
+                .onFailure(throwable -> {
                             saveServiceUrl(router, routingContext, newServiceUrl.getName(), newServiceUrl.getPath());
-                        }).onFailure(throwable -> {
-                            LOGGER.severe(throwable.getMessage());
-                            routingContext.response().end("Cannot save service");
                         }
                 );
     }
@@ -109,7 +107,7 @@ public class ServiceUrlService {
 
                 .compose(
                         serviceUrl -> {
-                            if(serviceUrl != null) {
+                            if (serviceUrl != null) {
                                 serviceUrl.setName(newOrExistingServiceUrl.getName());
                                 return this.serviceUrlRepository.update(serviceUrl);
                             } else {

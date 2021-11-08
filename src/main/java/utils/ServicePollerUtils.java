@@ -35,7 +35,7 @@ public class ServicePollerUtils {
     }
 
     public static boolean validUrl(String urlPath) {
-        if (urlPath == null || urlPath.startsWith("/") || urlPath.startsWith("\\")) {
+        if (urlPath == null || urlPath.length() == 0 || urlPath.startsWith("/") || urlPath.startsWith("\\")) {
             return false;
         }
         return true;

@@ -12,9 +12,10 @@ import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlResult;
 import io.vertx.sqlclient.Tuple;
+import utils.ServiceException;
 
 public class ServiceUrlRepository {
-    private static Function<Row, ServiceUrl> MAPPER = (row) ->
+    private static final Function<Row, ServiceUrl> MAPPER = (row) ->
             ServiceUrl.of(
                     row.getString("name"),
                     row.getString("path")
@@ -47,7 +48,7 @@ public class ServiceUrlRepository {
                             if (iterator.hasNext()) {
                                 return MAPPER.apply(iterator.next());
                             }
-                            return null;
+                            throw new ServiceException("Service url not found");
                         }
                 );
     }
