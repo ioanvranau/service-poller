@@ -1,5 +1,6 @@
 package com.service.poller.model;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class ServiceUrl {
@@ -7,12 +8,14 @@ public class ServiceUrl {
     private final static String[] STATUS_LIST = new String[]{"OK", "FAIL"};
     private String name;
     private String path;
+    private String creationTime;
     private String status;
 
-    public static ServiceUrl of(String name, String path) {
+    public static ServiceUrl of(String name, String path, String date) {
         ServiceUrl serviceUrl = new ServiceUrl();
         serviceUrl.setName(name);
         serviceUrl.setPath(path);
+        serviceUrl.setCreationTime(date);
         return serviceUrl;
     }
 
@@ -43,5 +46,13 @@ public class ServiceUrl {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
     }
 }

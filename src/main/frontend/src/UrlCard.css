@@ -1,6 +1,6 @@
 .card {
-    height: 100px;
-    width: 100px;
+    height: 110px;
+    width: 150px;
     padding: 0;
     background-color: #FFF;
     -webkit-filter: drop-shadow(0px 0px 5px #666);
@@ -10,16 +10,31 @@
 }
 
 .url-name {
-    width: 85px;
+    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 5px 5px 5px 10px;
     font-size: 1.3rem;
     margin: 0;
-    background: white;
+    background: #49abff;
     cursor: pointer;
 
+}
+.url-path {
+    font-size: 10px;
+    width: 150px;
+    word-break: break-all;
+    max-height: 30px;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.url-creation-time {
+    font-size: 10px;
 }
 
 .card-delete:hover {
@@ -38,5 +53,5 @@
 
 .url-status {
     text-align: center;
-    padding: 15px 5px;
+    padding: 0 15px 5px 15px;
 }

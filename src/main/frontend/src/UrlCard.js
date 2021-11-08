@@ -2,7 +2,7 @@ import React from 'react';
 import './UrlCard.css';
 import {deleteServiceUrl} from "./Api";
 
-function UrlCard({name, path, status, urlEditCallback, refreshUrls}) {
+function UrlCard({name, path, status, urlEditCallback, refreshUrls, creationTime}) {
 
     function deleteCard() {
         deleteServiceUrl(path).then(() => {
@@ -21,7 +21,9 @@ function UrlCard({name, path, status, urlEditCallback, refreshUrls}) {
                     <div className="url-name" onClick={getCardData}>{name}</div>
                     <div className="card-delete" title="Delete me!" onClick={deleteCard}>X</div>
                 </div>
+                <div className="url-path">{window.location.href}{path}</div>
                 <div className="url-status">{status}</div>
+                <div className="url-creation-time">Created:{creationTime}</div>
             </div>
         </div>
     );

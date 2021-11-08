@@ -18,7 +18,8 @@ public class ServiceUrlRepository {
     private static final Function<Row, ServiceUrl> MAPPER = (row) ->
             ServiceUrl.of(
                     row.getString("name"),
-                    row.getString("path")
+                    row.getString("path"),
+                    row.getLocalDateTime("creation_time").toString()
             );
 
     private final Pool client;

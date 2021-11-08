@@ -26,7 +26,7 @@ function App() {
         setUrlPathToEdit(nameAndPath.path);
     };
     const resultUrls = (urls || []).map((url) =>
-        <UrlCard name={url.name} status={url.status} path={url.path} key={url.path}
+        <UrlCard name={url.name} status={url.status} path={url.path} key={url.path} creationTime={url.creationTime}
                  urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls}/>
     );
 
@@ -75,8 +75,7 @@ function App() {
                 </div>
             </div>
             <div className="url-cards-container">
-                <h3>Click on any URL card name to get data for update</h3>
-                <h3>{window.location.href}</h3>
+                <h3>Click on any URL card name to get url for update the name.</h3>
                 <div className="row">
                     {resultUrls}
                 </div>
