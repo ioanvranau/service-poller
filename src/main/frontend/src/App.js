@@ -1,12 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {addNewServiceUrl, getAllServiceUrls, ShowErrorMessage, ShowSuccessMessage, updateNewServiceUrl} from './Api';
+import {
+    addNewServiceUrl,
+    getAllServiceUrls,
+    ShowErrorMessage,
+    ShowSuccessMessage,
+    updateNewServiceUrl,
+    useInterval
+} from './Api';
 import UrlCard from './UrlCard';
 import "react-notifications/lib/notifications.css";
 import {NotificationContainer} from "react-notifications";
+import {SliderComponent} from 'react-input-range-slider'
 
 function App() {
 
+    const initialRefreshValue = 2;
+    const [isRunning, setIsRunning] = useState(false);
+    const [count, setCount] = useState(0);
+    const [refreshRate, setRefreshRate] = useState(initialRefreshValue * 1000);
     const [urls, setUrls] = useState(0);
     const [urlNameToEdit, setUrlNameToEdit] = useState('');
     const [urlPathToEdit, setUrlPathToEdit] = useState('');
@@ -20,6 +32,11 @@ function App() {
     useEffect(() => {
         fetchAllUrls();
     }, []);
+
+    useInterval(() => {
+        fetchAllUrls();
+        setCount(count + 1);
+    }, isRunning ? refreshRate : null);
 
     const urlNameAndPathToEditChange = (nameAndPath) => {
         setUrlNameToEdit(nameAndPath.name);
@@ -59,6 +76,14 @@ function App() {
         });
     }
 
+    function handleRefreshRateChange(e) {
+        setRefreshRate(e * 1000);
+    }
+
+    function handleIsRunningChange(e) {
+        setIsRunning(e.target.checked);
+    }
+
     return (
         <div className="content">
             <NotificationContainer/>
@@ -75,7 +100,19 @@ function App() {
                 </div>
             </div>
             <div className="url-cards-container">
-                <h3>Click on any URL card name to get url for update the name.</h3>
+                <h3>Click on any URL card name to get url details above and update them if needed.</h3>
+                <div className="refresh-container">
+                    <input type="checkbox" checked={isRunning} onChange={handleIsRunningChange}/> Running poller
+                    <div>Count: {count}</div>
+                    <div>Refresh rate</div>
+                    <SliderComponent
+                        min={0.02}
+                        max={initialRefreshValue}
+                        step={0.01}
+                        value={refreshRate}
+                        callback={(value) => handleRefreshRateChange(value)}
+                    />
+                </div>
                 <div className="row">
                     {resultUrls}
                 </div>

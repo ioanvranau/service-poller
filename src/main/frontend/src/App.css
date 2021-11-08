@@ -124,3 +124,6 @@
 .blue-button:disabled {
     cursor: auto;
 }
+.refresh-container {
+    width: 150px;
+}

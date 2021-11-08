@@ -1,4 +1,5 @@
 import {NotificationManager} from "react-notifications";
+import {useEffect, useRef} from 'react';
 
 export function getAllServiceUrls() {
     return fetch("/api/url")
@@ -45,4 +46,26 @@ function handleErrors(response) {
         throw response;
     }
     return response;
+}
+
+
+export const useInterval = (callback, delay) => {
+
+    const savedCallback = useRef();
+
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+
+        if (delay !== null) {
+            const id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
 }

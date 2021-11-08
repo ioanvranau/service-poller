@@ -26,6 +26,7 @@ public class ServiceUrlService {
     }
 
     public void all(RoutingContext rc) {
+        LOGGER.info("fetchAll");
         this.serviceUrlRepository.findAll()
                 .onSuccess(
                         data -> rc.response().end(Json.encode(data))
