@@ -1,13 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './UrlCard.css';
-import {deleteServiceUrl, ShowSuccessMessage} from "./Api";
+import {deleteServiceUrl, getServiceUrl, ShowSuccessMessage} from "./Api";
 
-function UrlCard({name, path, status, urlEditCallback, refreshUrls, creationTime}) {
+function UrlCard({name, path, initialStatus, urlEditCallback, refreshUrls, creationTime, isRunning}) {
+
+    const [status, setStatus] = useState(initialStatus);
 
     function deleteCard() {
         deleteServiceUrl(path).then(() => {
             refreshUrls();
             ShowSuccessMessage('Service deleted successfully');
+        });
+    }
+
+    function updateServiceUrlStatus() {
+        getServiceUrl(path).then((response) => {
+            let statusText = response.statusText;
+            setStatus(statusText)
+            ShowSuccessMessage('Service polled successfully');
         });
     }
 
@@ -24,6 +34,7 @@ function UrlCard({name, path, status, urlEditCallback, refreshUrls, creationTime
                 </div>
                 <div className="url-path">{window.location.href}{path}</div>
                 <div className="url-status">{status}</div>
+                <button onClick={updateServiceUrlStatus}>Click</button>
                 <div className="url-creation-time">Created:{creationTime}</div>
             </div>
         </div>

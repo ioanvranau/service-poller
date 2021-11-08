@@ -43,8 +43,8 @@ function App() {
         setUrlPathToEdit(nameAndPath.path);
     };
     const resultUrls = (urls || []).map((url) =>
-        <UrlCard name={url.name} status={url.status} path={url.path} key={url.path} creationTime={url.creationTime}
-                 urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls}/>
+        <UrlCard name={url.name} initialStatus={url.status} path={url.path} key={url.path} creationTime={url.creationTime}
+                 urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls} isRunning={isRunning}/>
     );
 
     function handleNameChange(event) {

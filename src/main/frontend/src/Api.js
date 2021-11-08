@@ -33,6 +33,11 @@ export function deleteServiceUrl(path) {
     return fetch('api/url/' + path, {method: 'DELETE'});
 }
 
+export function getServiceUrl(path) {
+    return fetch(path);
+}
+
+
 export function ShowSuccessMessage(message) {
     NotificationManager.success(message, "", 2000);
 }
