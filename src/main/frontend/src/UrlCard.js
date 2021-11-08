@@ -15,8 +15,7 @@ function UrlCard({name, path, initialStatus, urlEditCallback, refreshUrls, creat
 
     function updateServiceUrlStatus() {
         getServiceUrl(path).then((response) => {
-            let statusText = response.statusText;
-            setStatus(statusText)
+            setStatus(response)
             ShowSuccessMessage('Service polled successfully');
         });
     }

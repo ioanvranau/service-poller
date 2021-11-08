@@ -34,7 +34,7 @@ export function deleteServiceUrl(path) {
 }
 
 export function getServiceUrl(path) {
-    return fetch(path);
+    return fetch(path).then(response => response.text());
 }
 
 
