@@ -58,6 +58,15 @@ function App() {
     function updateService() {
         updateNewServiceUrl(urlNameToEdit, urlPathToEdit).then(() => {
             fetchAllUrls();
+            ShowSuccessMessage('Service updated successfully');
+        }).catch(function (error) {
+            if (error.status === 409) {
+                ShowErrorMessage('Service already added with path:' + urlPathToEdit);
+            } else if (error.status === 406) {
+                ShowErrorMessage('Invalid name: ' + urlPathToEdit + ' or path:' + urlPathToEdit);
+            } else {
+                ShowErrorMessage('Cannot add new service:' + error.statusText);
+            }
         });
     }
 

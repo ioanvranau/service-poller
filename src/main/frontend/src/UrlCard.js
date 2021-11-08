@@ -1,12 +1,13 @@
 import React from 'react';
 import './UrlCard.css';
-import {deleteServiceUrl} from "./Api";
+import {deleteServiceUrl, ShowSuccessMessage} from "./Api";
 
 function UrlCard({name, path, status, urlEditCallback, refreshUrls, creationTime}) {
 
     function deleteCard() {
         deleteServiceUrl(path).then(() => {
             refreshUrls();
+            ShowSuccessMessage('Service deleted successfully');
         });
     }
 
