@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
+import './utils/buttons.css';
 import {
     addNewServiceUrl,
     getAllServiceUrls,
@@ -16,7 +17,8 @@ import {SliderComponent} from 'react-input-range-slider'
 function App() {
 
     const initialRefreshValue = 2;
-    const [isRunning, setIsRunning] = useState(false);
+    const [isRunningCounter, setIsRunningCounter] = useState(true);
+    const [isRunningAllServicePoller, setIsRunningAllServicePoller] = useState(false);
     const [count, setCount] = useState(0);
     const [refreshRate, setRefreshRate] = useState(initialRefreshValue * 1000);
     const [urls, setUrls] = useState(0);
@@ -34,17 +36,18 @@ function App() {
     }, []);
 
     useInterval(() => {
-        fetchAllUrls();
         setCount(count + 1);
-    }, isRunning ? refreshRate : null);
+    }, isRunningCounter ? refreshRate : null);
 
     const urlNameAndPathToEditChange = (nameAndPath) => {
         setUrlNameToEdit(nameAndPath.name);
         setUrlPathToEdit(nameAndPath.path);
     };
     const resultUrls = (urls || []).map((url) =>
-        <UrlCard name={url.name} initialStatus={url.status} path={url.path} key={url.path} creationTime={url.creationTime}
-                 urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls} isRunning={isRunning}/>
+        <UrlCard name={url.name} initialStatus={url.status} path={url.path} key={url.path}
+                 creationTime={url.creationTime}
+                 urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls}
+                 initialIsRunning={isRunningAllServicePoller} refreshRate={refreshRate}/>
     );
 
     function handleNameChange(event) {
@@ -89,9 +92,20 @@ function App() {
         setRefreshRate(e * 1000);
     }
 
-    function handleIsRunningChange(e) {
-        setIsRunning(e.target.checked);
+    function startPollingForAllServices() {
+        if (isRunningAllServicePoller) {
+            setIsRunningAllServicePoller(false)
+        } else {
+            setIsRunningAllServicePoller(true)
+        }
     }
+
+    function handleIsRunningCounterChange(e) {
+        setIsRunningCounter(e.target.checked);
+    }
+
+    let startButtonClassName = isRunningAllServicePoller ? "button-red" : "button-gradient";
+    let startButtonLabel = isRunningAllServicePoller ? "Stop all" : "Start all";
 
     return (
         <div className="content">
@@ -110,8 +124,17 @@ function App() {
             </div>
             <div className="url-cards-container">
                 <h3>Click on any URL card name to get url details above and update them if needed.</h3>
+                <div className="start-all">
+                    <h6>Here is just a counter to see that the polling is working</h6>
+                    <button title="Start polling for all services" onClick={startPollingForAllServices}
+                            className={startButtonClassName}>{startButtonLabel}
+                    </button>
+                </div>
                 <div className="refresh-container">
-                    <input type="checkbox" checked={isRunning} onChange={handleIsRunningChange}/> Running poller
+                    <div><input
+                        type="checkbox" checked={isRunningCounter}
+                        onChange={handleIsRunningCounterChange}/> Running counter
+                    </div>
                     <div>Count: {count}</div>
                     <div>Refresh rate</div>
                     <SliderComponent

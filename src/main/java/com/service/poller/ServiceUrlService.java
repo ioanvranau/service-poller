@@ -47,6 +47,7 @@ public class ServiceUrlService {
     private void createNewRoute(Router router, ServiceUrl serviceUrl) {
         Route messageRoute = router.get("/" + serviceUrl.getPath());
         messageRoute.handler(newRc -> {
+            LOGGER.info("get status for service " + serviceUrl.getPath());
             newRc.response().end(serviceUrl.getStatus());
         });
     }

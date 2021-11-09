@@ -1,10 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './UrlCard.css';
-import {deleteServiceUrl, getServiceUrl, ShowSuccessMessage} from "./Api";
+import {deleteServiceUrl, getServiceUrl, ShowSuccessMessage, useInterval} from "./Api";
 
-function UrlCard({name, path, initialStatus, urlEditCallback, refreshUrls, creationTime, isRunning}) {
+function UrlCard({
+                     name,
+                     path,
+                     initialStatus,
+                     urlEditCallback,
+                     refreshUrls,
+                     creationTime,
+                     initialIsRunning,
+                     refreshRate
+                 }) {
 
     const [status, setStatus] = useState(initialStatus);
+    const [isRunning, setIsRunning] = useState(initialIsRunning);
+    useEffect(() => {
+        setIsRunning(initialIsRunning)
+    }, [initialIsRunning])
 
     function deleteCard() {
         deleteServiceUrl(path).then(() => {
@@ -13,11 +26,15 @@ function UrlCard({name, path, initialStatus, urlEditCallback, refreshUrls, creat
         });
     }
 
-    function updateServiceUrlStatus() {
+    useInterval(() => {
         getServiceUrl(path).then((response) => {
             setStatus(response)
             ShowSuccessMessage('Service polled successfully');
         });
+    }, isRunning ? refreshRate : null);
+
+    function handleIsRunningChange(e) {
+        setIsRunning(e.target.checked);
     }
 
     function getCardData() {
@@ -33,7 +50,7 @@ function UrlCard({name, path, initialStatus, urlEditCallback, refreshUrls, creat
                 </div>
                 <div className="url-path">{window.location.href}{path}</div>
                 <div className="url-status">{status}</div>
-                <button onClick={updateServiceUrlStatus}>Click</button>
+                <input type="checkbox" checked={isRunning} onChange={handleIsRunningChange}/> Running
                 <div className="url-creation-time">Created:{creationTime}</div>
             </div>
         </div>
