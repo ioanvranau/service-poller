@@ -1,4 +1,4 @@
-package utils;
+package com.service.poller.utils;
 
 public class ServiceException extends RuntimeException {
     private String error;

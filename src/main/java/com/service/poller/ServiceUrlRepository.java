@@ -6,13 +6,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import com.service.poller.model.ServiceUrl;
+import com.service.poller.utils.ServiceException;
 import io.vertx.core.Future;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Row;
 import io.vertx.sqlclient.RowSet;
 import io.vertx.sqlclient.SqlResult;
 import io.vertx.sqlclient.Tuple;
-import utils.ServiceException;
 
 public class ServiceUrlRepository {
     private static final Function<Row, ServiceUrl> MAPPER = (row) ->

@@ -8,8 +8,8 @@ import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.SqlConnectOptions;
-import static utils.ServicePollerUtils.getSqlClient;
-import static utils.ServicePollerUtils.getSqlConnectOptions;
+import static com.service.poller.utils.ServicePollerUtils.getSqlClient;
+import static com.service.poller.utils.ServicePollerUtils.getSqlConnectOptions;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -17,8 +17,6 @@ public class MainVerticle extends AbstractVerticle {
 
     final Pool sqlClient;
     private final int port;
-
-    private final String helloMessage = "Hello React from Vert.x!";
 
     public MainVerticle(int port, Pool sqlClient) {
         this.port = port;
@@ -50,12 +48,9 @@ public class MainVerticle extends AbstractVerticle {
 
         final Router router = createRoutes(urlService);
 
-        vertx.createHttpServer().requestHandler(router).listen(port).onSuccess(server -> {
-                    LOGGER.info("HTTP server started on port " + server.actualPort());
-                })
-                .onFailure(event -> {
-                    LOGGER.severe("Failed to start HTTP server:" + event.getMessage());
-                });
+        vertx.createHttpServer().requestHandler(router).listen(port)
+                .onSuccess(server -> LOGGER.info("HTTP server started on port " + server.actualPort()))
+                .onFailure(event -> LOGGER.severe("Failed to start HTTP server:" + event.getMessage()));
     }
 
     private Router createRoutes(UrlService urlService) {
@@ -63,7 +58,9 @@ public class MainVerticle extends AbstractVerticle {
         router.get().handler(StaticHandler.create());
 
         router.get("/api/url").produces("application/json").handler(urlService::all);
-        router.delete("/api/url/:path").handler(urlService::delete);
+        router.delete("/api/url").consumes("application/json")
+                .handler(BodyHandler.create())
+                .handler(urlService::delete);
 
         urlService.createRoutesForAlreadyAddedUrls(router);
 
@@ -73,7 +70,7 @@ public class MainVerticle extends AbstractVerticle {
 
         router.put("/api/url").consumes("application/json")
                 .handler(BodyHandler.create())
-                .handler(rc -> urlService.update(router, rc));
+                .handler(urlService::update);
 
         router.post("/api/urlstats").consumes("application/json")
                 .handler(BodyHandler.create())

@@ -30,6 +30,10 @@
     width: 100px;
 }
 
+.update-button {
+    width: 150px;
+}
+
 .blue-button:after {
     background-clip: padding-box;
     background-color: #1CB0F6;

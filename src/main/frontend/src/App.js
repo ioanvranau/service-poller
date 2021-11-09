@@ -63,12 +63,12 @@ function App() {
             fetchAllUrls();
             ShowSuccessMessage('Service updated successfully');
         }).catch(function (error) {
-            if (error.status === 409) {
-                ShowErrorMessage('Service already added with path:' + urlPathToEdit);
+            if (error.status === 404) {
+                ShowErrorMessage('Service do not exists. Path:' + urlPathToEdit);
             } else if (error.status === 406) {
                 ShowErrorMessage('Invalid name: ' + urlPathToEdit + ' or path:' + urlPathToEdit);
             } else {
-                ShowErrorMessage('Cannot add new service:' + error.statusText);
+                ShowErrorMessage('Cannot update service:' + error.statusText);
             }
         });
     }
@@ -118,12 +118,12 @@ function App() {
                     <div>Relative service path</div>
                     <input value={urlPathToEdit} onChange={handlePathChange}/>
                     <button onClick={addNewService} className="blue-button">Add</button>
-                    <button onClick={updateService} className="blue-button">Update</button>
+                    <button onClick={updateService} className="blue-button update-button">Update by path</button>
                     <button onClick={fetchAllUrls} className="blue-button">Refresh</button>
                 </div>
             </div>
             <div className="url-cards-container">
-                <h3>Click on any URL card name to get url details above and update them if needed.</h3>
+                <h3>Click on any URL card name to get url details above and update the name if needed.</h3>
                 <div className="start-all">
                     <h6>Here is just a counter to see that the polling is working</h6>
                     <button title="Start polling for all services" onClick={startPollingForAllServices}

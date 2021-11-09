@@ -1,4 +1,4 @@
-package utils;
+package com.service.poller.utils;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import io.vertx.core.Vertx;
@@ -14,9 +14,6 @@ public class ServicePollerUtils {
         String host = "db4free.net";
         String user = "servicepollerus";
         String password = "servicepollerpw";
-//        String host = "localhost";
-//        String user = "root";
-//        String password = "admin";
         String database = "servicepoller";
         final int port = 3306;
         return new MySQLConnectOptions()
@@ -36,10 +33,7 @@ public class ServicePollerUtils {
     }
 
     public static boolean validName(String name) {
-        if (name == null || name.length() == 0 || name.length() >= 100) {
-            return false;
-        }
-        return true;
+        return name != null && name.length() != 0 && name.length() < 100;
     }
 
     public static boolean validUrl(String urlPath) {

@@ -13,6 +13,7 @@ export function updateNewServiceUrl(name, path) {
         body: JSON.stringify({name: name, path: path})
     };
     return fetch('/api/url', requestOptions)
+        .then(handleErrors)
         .then(response => response);
 }
 
@@ -41,7 +42,12 @@ export function saveStatsForServiceUrl(name, path, status) {
 }
 
 export function deleteServiceUrl(path) {
-    return fetch('api/url/' + path, {method: 'DELETE'});
+    const requestOptions = {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({path: path})
+    };
+    return fetch('api/url', requestOptions);
 }
 
 export function getServiceUrl(path) {
