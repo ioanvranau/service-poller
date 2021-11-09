@@ -29,7 +29,6 @@ function UrlCard({
     useInterval(() => {
         getServiceUrl(path).then((response) => {
             setStatus(response)
-            ShowSuccessMessage('Service polled successfully');
         });
     }, isRunning ? refreshRate : null);
 
