@@ -6,7 +6,7 @@
   - Probably it will take a couple of seconds for the app to start up first time
 ### 2. Starting locally directly from the jar that's already build
 - Make sure java 1.8 is installed and added into classpath 
-- Download the jar file from https://github.com/ioanvranau/service-poller/blob/main/src/main/resources/service-poller-1.0.0-SNAPSHOT-fat.jar
+- Download the jar file from https://github.com/ioanvranau/service-poller/raw/main/src/main/resources/service-poller-1.0.0-SNAPSHOT-fat.jar
 - After navigating to download directory just run
 - `java -jar service-poller-1.0.0-SNAPSHOT-fat.jar`
 - wait for `Routes for existing urls has been created` message
