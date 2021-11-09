@@ -1,4 +1,4 @@
-package com.service.poller;
+package com.service.poller.repository;
 
 import java.util.List;
 import java.util.Objects;

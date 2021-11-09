@@ -1,6 +1,9 @@
 package com.service.poller;
 
 import java.util.logging.Logger;
+import com.service.poller.repository.ServiceStatsRepository;
+import com.service.poller.repository.ServiceUrlRepository;
+import com.service.poller.service.UrlService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;

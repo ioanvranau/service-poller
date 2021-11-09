@@ -1,4 +1,4 @@
-package com.service.poller;
+package com.service.poller.repository;
 
 import com.service.poller.model.ServiceUrl;
 import io.vertx.core.Future;

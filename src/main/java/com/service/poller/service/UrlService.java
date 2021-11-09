@@ -1,9 +1,11 @@
-package com.service.poller;
+package com.service.poller.service;
 
 import java.net.HttpURLConnection;
 import java.util.Random;
 import java.util.logging.Logger;
 import com.service.poller.model.ServiceUrl;
+import com.service.poller.repository.ServiceStatsRepository;
+import com.service.poller.repository.ServiceUrlRepository;
 import com.service.poller.utils.ServiceException;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Route;
