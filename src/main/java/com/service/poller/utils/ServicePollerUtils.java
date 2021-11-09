@@ -10,14 +10,24 @@ import io.vertx.sqlclient.SqlConnectOptions;
 
 public class ServicePollerUtils {
 
-    public static SqlConnectOptions getSqlConnectOptions() {
+    public static SqlConnectOptions getSqlConnectOptionsFromArgsIfApplicable(String... args) {
+        int dbPort = 3306;
         String host = "db4free.net";
+        if (args != null && args.length > 1) {
+            host = args[1];
+            if (args.length > 2) {
+                try {
+                    dbPort = Integer.parseInt(args[2]);
+                } catch (Exception e) {
+                    // use default
+                }
+            }
+        }
         String user = "servicepollerus";
         String password = "servicepollerpw";
         String database = "servicepoller";
-        final int port = 3306;
         return new MySQLConnectOptions()
-                .setPort(port)
+                .setPort(dbPort)
                 .setHost(host)
                 .setDatabase(database)
                 .setUser(user)

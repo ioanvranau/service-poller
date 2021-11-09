@@ -44,7 +44,7 @@ function App() {
         setUrlPathToEdit(nameAndPath.path);
     };
     const resultUrls = (urls || []).map((url) =>
-        <UrlCard name={url.name} initialStatus={url.status} path={url.path} key={url.path}
+        <UrlCard name={url.name} initialStatus={url.status ? url.status : 'IDLE' } path={url.path} key={url.path}
                  creationTime={url.creationTime}
                  urlEditCallback={urlNameAndPathToEditChange} refreshUrls={fetchAllUrls}
                  initialIsRunning={isRunningAllServicePoller} refreshRate={refreshRate}/>
@@ -111,7 +111,8 @@ function App() {
         <div className="content">
             <NotificationContainer/>
             <div>
-                <h2>Add new service</h2><h5>Service path will be relative to {window.location.href}</h5>
+                <h2>Add new service</h2>
+                <h5>Service path will be relative to {window.location.href} Valid examples: path, path/1/new, path/3</h5>
                 <div className="add-container">
                     <div>Service name</div>
                     <input value={urlNameToEdit} onChange={handleNameChange}/>

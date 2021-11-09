@@ -12,7 +12,7 @@ import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.SqlConnectOptions;
 import static com.service.poller.utils.ServicePollerUtils.getSqlClient;
-import static com.service.poller.utils.ServicePollerUtils.getSqlConnectOptions;
+import static com.service.poller.utils.ServicePollerUtils.getSqlConnectOptionsFromArgsIfApplicable;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -28,7 +28,6 @@ public class MainVerticle extends AbstractVerticle {
 
     public static void main(String[] args) {
         int webAppPort = 5000;
-        SqlConnectOptions sqlConnectOptions = getSqlConnectOptions();
         if (args != null && args.length > 0) {
             try {
                 webAppPort = Integer.parseInt(args[0]);
@@ -36,6 +35,7 @@ public class MainVerticle extends AbstractVerticle {
                 // use default
             }
         }
+        SqlConnectOptions sqlConnectOptions = getSqlConnectOptionsFromArgsIfApplicable(args);
         Vertx vertx = Vertx.vertx();
         Pool sqlClient = getSqlClient(vertx, sqlConnectOptions);
         vertx.deployVerticle(new MainVerticle(webAppPort, sqlClient));

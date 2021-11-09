@@ -1,3 +1,7 @@
+CREATE USER 'servicepollerus'@'localhost' IDENTIFIED BY 'servicepollerpw';
+GRANT ALL PRIVILEGES ON *.* TO 'servicepollerus'@'localhost'
+FLUSH PRIVILEGES;
+
 create database if not exists servicepoller;
 use servicepoller;
 CREATE TABLE if not exists servicepoller.url (
