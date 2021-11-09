@@ -1,7 +1,7 @@
 # Service Poller
     Make sure mvn/java 1.8 are installed before running this app
 
-##Running the application - three options
+##Running the application - 3 options
 
 ###1. Already online here: https://service-poller.herokuapp.com/
   - Probably it will take a couple of seconds for the app to start up first time
