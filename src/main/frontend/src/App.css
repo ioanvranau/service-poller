@@ -17,11 +17,20 @@
     padding: 16px;
     box-sizing: border-box;
 }
+.content h5 {
+    margin: 0 0 10px;
+}
+.content h2 {
+    margin: 0;
+}
 
 .url-cards-container {
     width: 900px;
 }
 
+.url-cards-container h3 {
+    margin: 10px 0 25px;
+}
 .url-cards-container h6 {
     margin: 0;
     width: 500px;
@@ -61,7 +70,6 @@
 .add-container {
     width: 1000px;
     display: flex;
-    margin-bottom: 30px;
 }
 
 .add-container button {

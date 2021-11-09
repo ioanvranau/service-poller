@@ -29,6 +29,17 @@ export function addNewServiceUrl(name, path) {
         })
 }
 
+export function saveStatsForServiceUrl(name, path, status) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, path: path, status: status})
+    };
+    fetch('/api/urlstats', requestOptions)
+        .then(() => {/* ignore it. just stats*/
+        });
+}
+
 export function deleteServiceUrl(path) {
     return fetch('api/url/' + path, {method: 'DELETE'});
 }

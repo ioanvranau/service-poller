@@ -3,7 +3,6 @@ package com.service.poller;
 import java.util.logging.Logger;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
-import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
@@ -46,9 +45,10 @@ public class MainVerticle extends AbstractVerticle {
     public void start() throws Exception {
         LOGGER.info("Starting HTTP server...");
         final ServiceUrlRepository serviceUrlRepository = ServiceUrlRepository.create(sqlClient);
-        final ServiceUrlService serviceUrlService = ServiceUrlService.create(serviceUrlRepository);
+        final ServiceStatsRepository serviceStatsRepository = ServiceStatsRepository.create(sqlClient);
+        final UrlService urlService = UrlService.create(serviceUrlRepository, serviceStatsRepository);
 
-        final Router router = createRoutes(serviceUrlService);
+        final Router router = createRoutes(urlService);
 
         vertx.createHttpServer().requestHandler(router).listen(port).onSuccess(server -> {
                     LOGGER.info("HTTP server started on port " + server.actualPort());
@@ -58,22 +58,26 @@ public class MainVerticle extends AbstractVerticle {
                 });
     }
 
-    private Router createRoutes(ServiceUrlService serviceUrlService) {
+    private Router createRoutes(UrlService urlService) {
         final Router router = Router.router(vertx);
         router.get().handler(StaticHandler.create());
 
-        router.get("/api/url").produces("application/json").handler(serviceUrlService::all);
-        router.delete("/api/url/:path").handler(serviceUrlService::delete);
+        router.get("/api/url").produces("application/json").handler(urlService::all);
+        router.delete("/api/url/:path").handler(urlService::delete);
 
-        serviceUrlService.createRoutesForAlreadyAddedUrls(router);
+        urlService.createRoutesForAlreadyAddedUrls(router);
 
         router.post("/api/url").consumes("application/json")
                 .handler(BodyHandler.create())
-                .handler(routingContext -> serviceUrlService.createAndPersistNewService(router, routingContext));
+                .handler(routingContext -> urlService.createAndPersistNewService(router, routingContext));
 
         router.put("/api/url").consumes("application/json")
                 .handler(BodyHandler.create())
-                .handler(rc -> serviceUrlService.update(router, rc));
+                .handler(rc -> urlService.update(router, rc));
+
+        router.post("/api/urlstats").consumes("application/json")
+                .handler(BodyHandler.create())
+                .handler(urlService::saveStats);
         return router;
     }
 }

@@ -1,5 +1,6 @@
 package utils;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import io.vertx.core.Vertx;
 import io.vertx.mysqlclient.MySQLConnectOptions;
 import io.vertx.mysqlclient.MySQLPool;
@@ -34,10 +35,20 @@ public class ServicePollerUtils {
         return client;
     }
 
-    public static boolean validUrl(String urlPath) {
-        if (urlPath == null || urlPath.length() == 0 || urlPath.startsWith("/") || urlPath.startsWith("\\")) {
+    public static boolean validName(String name) {
+        if (name == null || name.length() == 0 || name.length() >= 100) {
             return false;
         }
         return true;
+    }
+
+    public static boolean validUrl(String urlPath) {
+
+        if (urlPath == null || urlPath.length() == 0 || urlPath.startsWith("/") || urlPath.startsWith("/api")
+                || urlPath.startsWith("\\") || urlPath.length() >= 100) {
+            return false;
+        }
+        UrlValidator urlValidator = new UrlValidator();
+        return urlValidator.isValid("https://a.com/" + urlPath);
     }
 }

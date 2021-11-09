@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './UrlCard.css';
-import {deleteServiceUrl, getServiceUrl, ShowSuccessMessage, useInterval} from "./Api";
+import {deleteServiceUrl, getServiceUrl, saveStatsForServiceUrl, ShowSuccessMessage, useInterval} from "./Api";
 
 function UrlCard({
                      name,
@@ -28,7 +28,10 @@ function UrlCard({
 
     useInterval(() => {
         getServiceUrl(path).then((response) => {
-            setStatus(response)
+            if (isRunning) {
+                setStatus(response);
+                saveStatsForServiceUrl(name, path, response);
+            }
         });
     }, isRunning ? refreshRate : null);
 

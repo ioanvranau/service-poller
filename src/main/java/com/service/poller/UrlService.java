@@ -2,6 +2,7 @@ package com.service.poller;
 
 import java.net.HttpURLConnection;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 import com.service.poller.model.ServiceUrl;
 import io.vertx.core.Future;
@@ -11,18 +12,27 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import utils.ServiceException;
 import static java.net.HttpURLConnection.HTTP_NOT_ACCEPTABLE;
+import static utils.ServicePollerUtils.validName;
 import static utils.ServicePollerUtils.validUrl;
 
-public class ServiceUrlService {
-    private final static Logger LOGGER = Logger.getLogger(ServiceUrlService.class.getName());
+public class UrlService {
+    private final static Logger LOGGER = Logger.getLogger(UrlService.class.getName());
     private final ServiceUrlRepository serviceUrlRepository;
+    private final ServiceStatsRepository serviceStatsRepository;
+    private static final Random RANDOM = new Random();
+    private final static String[] STATUS_LIST = new String[]{"OK", "FAIL"};
 
-    private ServiceUrlService(ServiceUrlRepository serviceUrlRepository) {
+    public static String getRandomValue() {
+        final int index = RANDOM.nextInt(STATUS_LIST.length);
+        return STATUS_LIST[index];
+    }
+    private UrlService(ServiceUrlRepository serviceUrlRepository, ServiceStatsRepository serviceStatsRepository) {
         this.serviceUrlRepository = serviceUrlRepository;
+        this.serviceStatsRepository = serviceStatsRepository;
     }
 
-    public static ServiceUrlService create(ServiceUrlRepository serviceUrlRepository) {
-        return new ServiceUrlService(serviceUrlRepository);
+    public static UrlService create(ServiceUrlRepository serviceUrlRepository, ServiceStatsRepository serviceStatsRepository) {
+        return new UrlService(serviceUrlRepository, serviceStatsRepository);
     }
 
     public void all(RoutingContext rc) {
@@ -48,15 +58,17 @@ public class ServiceUrlService {
         Route messageRoute = router.get("/" + serviceUrl.getPath());
         messageRoute.handler(newRc -> {
             LOGGER.info("get status for service " + serviceUrl.getPath());
-            newRc.response().end(serviceUrl.getStatus());
+            newRc.response().end(getRandomValue());
         });
     }
+
+
 
     public void createAndPersistNewService(Router router, RoutingContext routingContext) {
         final ServiceUrl newServiceUrl = routingContext.getBodyAsJson().mapTo(ServiceUrl.class);
         final String name = newServiceUrl.getName();
         final String path = newServiceUrl.getPath();
-        if (!validUrl(path) || name == null || name.length() == 0) {
+        if (!validUrl(path) || !validName(name)) {
             routingContext.fail(HTTP_NOT_ACCEPTABLE);
             return;
         }
@@ -125,4 +137,16 @@ public class ServiceUrlService {
                 );
 
     }
+
+    public void saveStats(RoutingContext routingContext) {
+        final ServiceUrl serviceUrl = routingContext.getBodyAsJson().mapTo(ServiceUrl.class);
+        serviceStatsRepository.save(serviceUrl).onSuccess(
+                id -> {
+                    routingContext.response().end();
+                }).onFailure(throwable -> {
+            routingContext.response().end("Cannot save stats");
+            LOGGER.severe(throwable.getMessage());
+        });
+    }
+
 }

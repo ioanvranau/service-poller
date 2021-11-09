@@ -111,11 +111,11 @@ function App() {
         <div className="content">
             <NotificationContainer/>
             <div>
-                <h2>Add new service</h2>
+                <h2>Add new service</h2><h5>Service path will be relative to {window.location.href}</h5>
                 <div className="add-container">
                     <div>Service name</div>
                     <input value={urlNameToEdit} onChange={handleNameChange}/>
-                    <div>Service path</div>
+                    <div>Relative service path</div>
                     <input value={urlPathToEdit} onChange={handlePathChange}/>
                     <button onClick={addNewService} className="blue-button">Add</button>
                     <button onClick={updateService} className="blue-button">Update</button>
@@ -138,9 +138,9 @@ function App() {
                     <div>Count: {count}</div>
                     <div>Refresh rate</div>
                     <SliderComponent
-                        min={0.02}
+                        min={0.1}
                         max={initialRefreshValue}
-                        step={0.01}
+                        step={0.1}
                         value={refreshRate}
                         callback={(value) => handleRefreshRateChange(value)}
                     />
