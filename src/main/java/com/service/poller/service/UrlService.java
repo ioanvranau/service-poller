@@ -101,7 +101,7 @@ public class UrlService {
                         serviceUrl -> this.serviceUrlRepository.deleteByPath(path)
                 )
                 .onSuccess(
-                        data -> rc.response().setStatusCode(204).end()
+                        data -> rc.response().setStatusCode(200).end()
                 )
                 .onFailure(
                         throwable -> rc.fail(404, throwable)

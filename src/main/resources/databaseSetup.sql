@@ -1,5 +1,5 @@
-CREATE USER 'servicepollerus'@'localhost' IDENTIFIED BY 'servicepollerpw';
-GRANT ALL PRIVILEGES ON *.* TO 'servicepollerus'@'localhost'
+CREATE USER IF NOT EXISTS 'servicepollerus'@'localhost' IDENTIFIED BY 'servicepollerpw';
+GRANT ALL PRIVILEGES ON *.* TO 'servicepollerus'@'localhost';
 FLUSH PRIVILEGES;
 
 create database if not exists servicepoller;
