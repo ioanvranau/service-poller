@@ -22,6 +22,10 @@
     margin: 0 0 10px;
 }
 
+.content h1 {
+    text-align: center;
+    margin: 0;
+}
 .content h2 {
     margin: 0;
 }
@@ -30,17 +34,19 @@
     width: 900px;
 }
 
-.url-cards-container h3 {
-    margin: 10px 0 25px;
+.content h4 {
+    margin-bottom: 10px;
+    margin-top: 0px;
 }
 
-.url-cards-container h6 {
-    margin: 0;
-    width: 500px;
+.content h6 {
+    margin: 5px 0;
+    width: 550px;
 }
 
 .start-all {
     display: flex;
+    margin-top: 20px;
 }
 
 /* Responsive columns */

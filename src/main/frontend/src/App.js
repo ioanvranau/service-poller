@@ -111,6 +111,17 @@ function App() {
         <div className="content">
             <NotificationContainer/>
             <div>
+                <h1>Service Poller App</h1>
+                <div className="start-all">
+                    <div>
+                        <h6>You can start polling all services at once, or use the Running checkbox for each service poll individually</h6>
+                    </div>
+                    <button title="Start polling for all services" onClick={startPollingForAllServices}
+                            className={startButtonClassName}>{startButtonLabel}
+                    </button>
+                </div>
+            </div>
+            <div className="url-cards-container">
                 <h2>Add new service</h2>
                 <h5>Service path will be relative to {window.location.href} Valid examples: path, path/1/new, path/3</h5>
                 <div className="add-container">
@@ -122,15 +133,8 @@ function App() {
                     <button onClick={updateService} className="blue-button update-button">Update by path</button>
                     <button onClick={fetchAllUrls} className="blue-button">Refresh</button>
                 </div>
-            </div>
-            <div className="url-cards-container">
-                <h3>Click on any URL card name to get url details above and update the name if needed.</h3>
-                <div className="start-all">
-                    <h6>Here is just a counter to see that the polling is working</h6>
-                    <button title="Start polling for all services" onClick={startPollingForAllServices}
-                            className={startButtonClassName}>{startButtonLabel}
-                    </button>
-                </div>
+                <h4>Click on any URL card name to get url details above and update the name if needed.</h4>
+                <h6>Bellow is just a counter to see that the polling is working</h6>
                 <div className="refresh-container">
                     <div><input
                         type="checkbox" checked={isRunningCounter}
