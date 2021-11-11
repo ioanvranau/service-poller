@@ -4,6 +4,7 @@
 
 ### 1. Already online here: https://service-poller.herokuapp.com/
   - Probably it will take a couple of seconds for the app to start up first time
+  - Also first db interaction(add/refresh) could take a couple of seconds
 ### 2. Starting locally directly from the jar that's already build
 - Make sure java 1.8 is installed and added into classpath 
 - Download the jar file from https://github.com/ioanvranau/service-poller/raw/main/src/main/resources/service-poller-1.0.0-SNAPSHOT-fat.jar
